@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:721733634321:android:62bcae12e31327373024b0",
+        "mobilesdk_app_id": "1:721733634321:android:3ebecad1a835f6053024b0",
         "android_client_info": {
-          "package_name": "com.example.chatapp_firebase"
+          "package_name": "com.phamvietanh.flutterchat"
         }
       },
       "oauth_client": [],
