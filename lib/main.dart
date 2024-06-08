@@ -1,4 +1,5 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:chatapp_firebase/authentication/login_screen.dart';
 import 'package:chatapp_firebase/main_screen/home_screen.dart';
 import 'package:chatapp_firebase/main_screen/settings_screen.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: theme,
         darkTheme: darktheme,
-        home: const HomeScreen(),
+        home: const LoginScreen(),
         navigatorObservers: [
           FirebaseAnalyticsObserver(analytics: analytics),
         ],

@@ -23,7 +23,17 @@ dependencies:
   firebase_auth: ^5.0.0
   firebase_storage: ^12.0.0
   cloud_firestore: ^5.0.0
-
+  country_picker: ^2.0.26
+  rounded_loading_button: ^2.0.8
+  provider: ^6.1.2
+  lottie: ^3.1.2
+  shared_preferences: ^2.2.3
+  pinput: ^5.0.0
+  google_fonts: ^6.2.1
+  image_picker: ^1.1.2
+  image_cropper: ^7.0.4
+  uuid: ^4.2.2
+  rounded_loading_button_plus: ^3.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -39,5 +49,6 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/lottie/
 
 
