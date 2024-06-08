@@ -1,8 +1,11 @@
+import 'package:chatapp_firebase/providers/authentication_provider.dart';
 import 'package:chatapp_firebase/utilities/assets_manager.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:rounded_loading_button_plus/rounded_loading_button.dart';
 
 
@@ -38,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthenticationProvider>();
     return Scaffold(
       body: Center(
         child: Padding(
@@ -85,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           context: context,
                           showPhoneCode: true,
                           countryListTheme: CountryListThemeData(
-                            bottomSheetHeight:600 ,
+                            bottomSheetHeight: 600,
                             textStyle: GoogleFonts.openSans(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -99,32 +103,41 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       },
                       child: Text(
-                        ' ${selectedCountry.flagEmoji} + ${selectedCountry.phoneCode}',
+                        ' ${selectedCountry.flagEmoji} + ${selectedCountry
+                            .phoneCode}',
                         style: GoogleFonts.openSans(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ),
-                  suffixIcon: _phoneNumberController.text.length >= 10
-                      ? InkWell(
-                    onTap: (){
-                      //TODO:SENT OTP
+                  suffixIcon: _phoneNumberController.text.length > 9
+                      ? authProvider.isLoading
+                      ? const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(),
+                      )
+                      :
+                  InkWell(
+                    onTap: () {
+                      //sign in with phone
+                      authProvider.signInWithPhoneNumber(
+                          phoneNumber: '+${selectedCountry.phoneCode}${_phoneNumberController.text}', context: context);
                     },
-                        child: Container(
-                                            height: 20,
-                                            width: 20,
-                                            margin: const EdgeInsets.all(10.0),
-                                            decoration: const BoxDecoration(
+                    child: Container(
+                      height: 20,
+                      width: 20,
+                      margin: const EdgeInsets.all(10.0),
+                      decoration: const BoxDecoration(
                         color: Colors.green,
                         shape: BoxShape.circle,
-                                            ),
-                                            child: const Icon(
+                      ),
+                      child: const Icon(
                         Icons.done,
                         color: Colors.white,
                         size: 20,
-                                            ),
-                                          ),
-                      )
+                      ),
+                    ),
+                  )
                       : null,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),

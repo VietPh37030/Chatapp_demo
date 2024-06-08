@@ -2,10 +2,12 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:chatapp_firebase/authentication/login_screen.dart';
 import 'package:chatapp_firebase/main_screen/home_screen.dart';
 import 'package:chatapp_firebase/main_screen/settings_screen.dart';
+import 'package:chatapp_firebase/providers/authentication_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -14,7 +16,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   final savedThemeMode = await AdaptiveTheme.getThemeMode();
-  runApp(MyApp(savedThemeMode: savedThemeMode));
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
+    ],child:MyApp(savedThemeMode: savedThemeMode),),);
+
+
 }
 class MyApp extends StatelessWidget {
    const MyApp({super.key,required this.savedThemeMode});
