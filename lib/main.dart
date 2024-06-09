@@ -1,5 +1,7 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:chatapp_firebase/authentication/login_screen.dart';
+import 'package:chatapp_firebase/authentication/otp_screen.dart';
+import 'package:chatapp_firebase/authentication/user_information_screen.dart';
 import 'package:chatapp_firebase/main_screen/home_screen.dart';
 import 'package:chatapp_firebase/main_screen/settings_screen.dart';
 import 'package:chatapp_firebase/providers/authentication_provider.dart';
@@ -8,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:provider/provider.dart';
+import 'constants.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -49,7 +52,16 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: theme,
         darkTheme: darktheme,
-        home: const LoginScreen(),
+       initialRoute: Constants.loginScreen,
+        routes: {
+          Constants.loginScreen: (context) => const LoginScreen(),
+          Constants.otpScreen:(context) =>const OtpScreen(),
+          Constants.userInformationScreen: (context) => const UserInformationScreen(),
+          Constants.homeScreen: (context) => const HomeScreen(),
+          Constants.settingsScreen: (context) => SettingsScreen(),
+
+
+        },
         navigatorObservers: [
           FirebaseAnalyticsObserver(analytics: analytics),
         ],

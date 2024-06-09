@@ -18,7 +18,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
-  final RoundedLoadingButtonController _btnController = RoundedLoadingButtonController(); // Sử dụng RoundedLoadingButtonController
+
 
   Country selectedCountry = Country(
     phoneCode: '26',
