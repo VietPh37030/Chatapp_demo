@@ -1,16 +1,15 @@
+import 'package:chatapp_firebase/constants.dart';
 import 'package:chatapp_firebase/providers/authentication_provider.dart';
-import 'package:chatapp_firebase/utilities/assets_manager.dart';
-import 'package:country_picker/country_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:rounded_loading_button_plus/rounded_loading_button.dart';
-
+import 'package:chatapp_firebase/utilities/assets_manager.dart';
+import 'package:country_picker/country_picker.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key); // Sửa dòng này
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -18,8 +17,6 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
-
-
   Country selectedCountry = Country(
     phoneCode: '26',
     countryCode: 'ZM',
@@ -103,8 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       },
                       child: Text(
-                        ' ${selectedCountry.flagEmoji} + ${selectedCountry
-                            .phoneCode}',
+                        ' ${selectedCountry.flagEmoji} + ${selectedCountry.phoneCode}',
                         style: GoogleFonts.openSans(
                             fontSize: 16, fontWeight: FontWeight.w500),
                       ),
@@ -113,15 +109,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   suffixIcon: _phoneNumberController.text.length > 9
                       ? authProvider.isLoading
                       ? const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: CircularProgressIndicator(),
-                      )
-                      :
-                  InkWell(
+                    padding: EdgeInsets.all(8.0),
+                    child: CircularProgressIndicator(),
+                  )
+                      : InkWell(
                     onTap: () {
-                      //sign in with phone
                       authProvider.signInWithPhoneNumber(
-                          phoneNumber: '+${selectedCountry.phoneCode}${_phoneNumberController.text}', context: context);
+                        phoneNumber:
+                        '+${selectedCountry.phoneCode}${_phoneNumberController.text}',
+                        context: context,
+                      );
                     },
                     child: Container(
                       height: 20,
