@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:chatapp_firebase/constants.dart';
 import 'package:chatapp_firebase/models/user_model.dart';
@@ -31,15 +32,15 @@ class AuthenticationProvider extends ChangeNotifier {
 
   Future<bool> checkUserExists() async {
     DocumentSnapshot documentSnapshot =
-    await _firestore.collection(Constants.users).doc(_uid).get();
+        await _firestore.collection(Constants.users).doc(_uid).get();
     return documentSnapshot.exists;
   }
 
   Future<void> getUserDataFromFireStore() async {
     DocumentSnapshot documentSnapshot =
-    await _firestore.collection(Constants.users).doc(_uid).get();
-    _userModel = UserModel.fromMap(
-        documentSnapshot.data() as Map<String, dynamic>);
+        await _firestore.collection(Constants.users).doc(_uid).get();
+    _userModel =
+        UserModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
     notifyListeners();
   }
 
@@ -53,7 +54,8 @@ class AuthenticationProvider extends ChangeNotifier {
 
   Future<void> getUserDataFromSharedPreferences() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String userModelString = sharedPreferences.getString(Constants.userModel) ?? '';
+    String userModelString =
+        sharedPreferences.getString(Constants.userModel) ?? '';
     _userModel = UserModel.fromMap(jsonDecode(userModelString));
     notifyListeners();
   }
@@ -121,5 +123,53 @@ class AuthenticationProvider extends ChangeNotifier {
       notifyListeners();
       showSnackBar(context, e.toString());
     });
+  }
+
+  // TODO:Save  user data to firestore
+  void saveUserDataToFireBase({
+    required UserModel userModel,
+    required File? fileImage,
+    required Function onSuccess,
+    required Function onFail,
+  }) async {
+    _isLoading = true;
+    notifyListeners();
+    try {
+      if (fileImage != null) {
+        String imageUrl = await storeFileToStorage(
+            file: fileImage,
+            reference: '${Constants.userImages}/${userModel.uid}');
+        userModel.image = imageUrl;
+      }
+      userModel.lastSeen = DateTime.now().millisecondsSinceEpoch.toString();
+      userModel.createdAt = DateTime.now().millisecondsSinceEpoch.toString();
+      _userModel =userModel;
+      _uid = userModel.uid;
+
+
+      ///save  user Dataa to FireStore
+      await _firestore
+          .collection(Constants.users)
+          .doc(userModel.uid)
+          .set(userModel.toMap());
+      _isLoading = false;
+      onSuccess();
+      notifyListeners();
+    } on FirebaseException catch (e) {
+      _isLoading = false;
+      notifyListeners();
+      onFail(e.toString());
+    }
+  }
+
+  //Stage file to storage and return file url
+  Future<String> storeFileToStorage({
+    required File file,
+    required String reference,
+  }) async {
+    UploadTask uploadTask = _storage.ref().child(reference).putFile(file);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String fileUrl = await taskSnapshot.ref.getDownloadURL();
+    return fileUrl;
   }
 }

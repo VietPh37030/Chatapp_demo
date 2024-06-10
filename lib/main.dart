@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
           Constants.otpScreen:(context) =>const OtpScreen(),
           Constants.userInformationScreen: (context) => const UserInformationScreen(),
           Constants.homeScreen: (context) => const HomeScreen(),
-          Constants.settingsScreen: (context) => SettingsScreen(),
+          Constants.settingsScreen: (context) => const SettingsScreen(),
 
 
         },
