@@ -6,8 +6,7 @@ import 'package:chatapp_firebase/providers/authentication_provider.dart';
 import 'package:chatapp_firebase/utilities/assets_manager.dart';
 import 'package:chatapp_firebase/utilities/global_methods.dart';
 import 'package:chatapp_firebase/widgets/app_bar_back-button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:chatapp_firebase/widgets/display_user_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:provider/provider.dart';
@@ -22,10 +21,9 @@ class UserInformationScreen extends StatefulWidget {
 
 class _UserInformationScreenState extends State<UserInformationScreen> {
   final RoundedLoadingButtonController _btnController =
-      RoundedLoadingButtonController();
+  RoundedLoadingButtonController();
   final TextEditingController _nameController = TextEditingController();
 
-//TODO:Sử lí chức năng chọn ảnh
   File? finalFileImage;
   String userImage = '';
 
@@ -42,16 +40,14 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
         onFail: (String message) {
           showSnackBar(context, message);
         });
-    //TODO:Crop  image
-   await cropImage(finalFileImage?.path);
-   popContext();
+     cropImage(finalFileImage?.path);
   }
-  popContext(){
+
+  popContext() {
     Navigator.pop(context);
   }
 
- Future <void> cropImage(filePath) async {
-//Crop image
+  void cropImage(filePath) async {
     if (filePath != null) {
       CroppedFile? croppedFile = await ImageCropper().cropImage(
         sourcePath: filePath,
@@ -59,48 +55,40 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
         maxWidth: 800,
         compressQuality: 90,
       );
-      // popTheDialog();
       if (croppedFile != null) {
         setState(() {
           finalFileImage = File(croppedFile.path);
         });
-      } else {
-        // popTheDialog();
       }
     }
-  }
-
-  //dialog
-  popTheDialog() {
-    Navigator.of(context).pop();
   }
 
   void showBottomSheet() {
     showModalBottomSheet(
         context: context,
         builder: (context) => SizedBox(
-              height: MediaQuery.of(context).size.height / 6,
-              child: Column(
-                children: [
-                  ListTile(
-                    onTap: () {
-                      selectImage(true);
-                      Navigator.of(context).pop();
-                    },
-                    leading: const Icon(Icons.camera_alt),
-                    title: Text('Máy ảnh'),
-                  ),
-                  ListTile(
-                    onTap: () {
-                      selectImage(false);
-                      Navigator.of(context).pop();
-                    },
-                    leading: const Icon(Icons.image),
-                    title: Text('Thư viện'),
-                  )
-                ],
+          height: MediaQuery.of(context).size.height / 6,
+          child: Column(
+            children: [
+              ListTile(
+                onTap: () {
+                  selectImage(true);
+                  Navigator.of(context).pop();
+                },
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Máy ảnh'),
               ),
-            ));
+              ListTile(
+                onTap: () {
+                  selectImage(false);
+                  Navigator.of(context).pop();
+                },
+                leading: const Icon(Icons.image),
+                title: const Text('Thư viện'),
+              )
+            ],
+          ),
+        ));
   }
 
   @override
@@ -113,69 +101,16 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
           },
         ),
         centerTitle: true,
-        title: Text("Thêm Thông Tin Cá Nhân"),
+        title: const Text("Thêm Thông Tin Cá Nhân"),
       ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
           child: Column(
             children: [
-              //TODO:su li chon anh
-              finalFileImage == null
-                  ? Stack(
-                      children: [
-                        const CircleAvatar(
-                          radius: 60,
-                          backgroundImage: AssetImage(AssetsManager.userImage),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: InkWell(
-                            //TO:Sử lí hành động
-                            onTap: () {
-                              showBottomSheet();
-                            },
-                            child: const CircleAvatar(
-                              radius: 20,
-                              backgroundColor: Colors.green,
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 60,
-                          backgroundImage:
-                              FileImage(File(finalFileImage!.path)),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: InkWell(
-                            onTap: () {
-                              showBottomSheet();
-                            },
-                            child: const CircleAvatar(
-                              radius: 20,
-                              backgroundColor: Colors.green,
-                              child: Icon(
-                                Icons.camera_alt,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+          DisplayUserImage(finalFileImage: finalFileImage, radius: 60, onPressed: (){
+            showBottomSheet();
+          }),
               const SizedBox(height: 30),
               TextField(
                 controller: _nameController,
@@ -192,14 +127,12 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
                 child: RoundedLoadingButton(
                   controller: _btnController,
                   onPressed: () {
-                    //TODO:Save user information
-                    if (_nameController.text.isNotEmpty ||
+                    if (_nameController.text.isEmpty ||
                         _nameController.text.length < 3) {
-                      showSnackBar(context, 'Please  enter your name');
+                      showSnackBar(context, 'Please enter your name');
                       _btnController.reset();
                       return;
                     }
-                    //TODO:Save user information
                     saveUserDataToFireStore();
                   },
                   successIcon: Icons.check,
@@ -222,7 +155,6 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
     );
   }
 
-  //TODO:save data  to firestore
   void saveUserDataToFireStore() async {
     final authProvider = context.read<AuthenticationProvider>();
 
@@ -232,32 +164,32 @@ class _UserInformationScreenState extends State<UserInformationScreen> {
         phoneNumber: authProvider.phoneNumber!,
         image: '',
         token: '',
-        aboutMe: 'App chat đa câcps đây hahhahaa',
+        aboutMe: 'App chat đa cấp đây hahhahaa',
         lastSeen: '',
         createdAt: '',
         isOnline: true,
         friendsUIDs: [],
         friendsRequestsUIDs: [],
         sendRequestsUIDs: []);
+
     authProvider.saveUserDataToFireBase(
         userModel: userModel,
         fileImage: finalFileImage,
-        onSuccess: () async{
+        onSuccess: () async {
           _btnController.success();
-         //save user data to firestore to shared preferences
           await authProvider.saveUserDataToSharedPreferences();
           navigateToHomeScreen();
         },
-        onFail: () async {
+        onFail: (errorMessage) async {
           _btnController.error();
+          showSnackBar(context, errorMessage);
           await Future.delayed(const Duration(seconds: 1));
           _btnController.reset();
         });
   }
 
   void navigateToHomeScreen() {
-// navigate to home screen and remove all previous screens
-    Navigator.of(context).pushNamedAndRemoveUntil(Constants.homeScreen,
-        (router)=>false);
+    Navigator.of(context)
+        .pushNamedAndRemoveUntil(Constants.homeScreen, (route) => false);
   }
 }

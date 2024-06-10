@@ -32,13 +32,13 @@ class AuthenticationProvider extends ChangeNotifier {
 
   Future<bool> checkUserExists() async {
     DocumentSnapshot documentSnapshot =
-        await _firestore.collection(Constants.users).doc(_uid).get();
+    await _firestore.collection(Constants.users).doc(_uid).get();
     return documentSnapshot.exists;
   }
 
   Future<void> getUserDataFromFireStore() async {
     DocumentSnapshot documentSnapshot =
-        await _firestore.collection(Constants.users).doc(_uid).get();
+    await _firestore.collection(Constants.users).doc(_uid).get();
     _userModel =
         UserModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
     notifyListeners();
@@ -125,7 +125,6 @@ class AuthenticationProvider extends ChangeNotifier {
     });
   }
 
-  // TODO:Save  user data to firestore
   void saveUserDataToFireBase({
     required UserModel userModel,
     required File? fileImage,
@@ -143,11 +142,9 @@ class AuthenticationProvider extends ChangeNotifier {
       }
       userModel.lastSeen = DateTime.now().millisecondsSinceEpoch.toString();
       userModel.createdAt = DateTime.now().millisecondsSinceEpoch.toString();
-      _userModel =userModel;
+      _userModel = userModel;
       _uid = userModel.uid;
 
-
-      ///save  user Dataa to FireStore
       await _firestore
           .collection(Constants.users)
           .doc(userModel.uid)
@@ -162,7 +159,6 @@ class AuthenticationProvider extends ChangeNotifier {
     }
   }
 
-  //Stage file to storage and return file url
   Future<String> storeFileToStorage({
     required File file,
     required String reference,
