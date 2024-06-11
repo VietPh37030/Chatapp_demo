@@ -10,6 +10,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:provider/provider.dart';
+import 'authentication/landing_screen.dart';
 import 'constants.dart';
 import 'firebase_options.dart';
 
@@ -52,8 +53,9 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: theme,
         darkTheme: darktheme,
-       initialRoute: Constants.loginScreen,
+       initialRoute: Constants.landingScreen,
         routes: {
+          Constants.landingScreen: (context) => const LandingScreen(),
           Constants.loginScreen: (context) => const LoginScreen(),
           Constants.otpScreen:(context) =>const OtpScreen(),
           Constants.userInformationScreen: (context) => const UserInformationScreen(),
