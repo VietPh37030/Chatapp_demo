@@ -176,7 +176,7 @@ class _OtpScreenState extends State<OtpScreen> {
       onSuccess: () async {
         bool userExists = await authProvider.checkUserExists();
         if (userExists) {
-          authProvider.getUserDataFromFireStore();
+          await authProvider.getUserDataFromFireStore();
           await authProvider.saveUserDataToSharedPreferences();
           navigate(userExists: true);
         } else {
