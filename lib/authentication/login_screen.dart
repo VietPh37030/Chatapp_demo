@@ -18,16 +18,16 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
   Country selectedCountry = Country(
-    phoneCode: '26',
-    countryCode: 'ZM',
-    e164Sc: 0,
-    geographic: true,
-    level: 1,
-    name: 'Zambia',
-    example: 'Zambia',
-    displayName: 'Zambia',
-    displayNameNoCountryCode: 'ZM',
-    e164Key: '',
+      phoneCode: '84',
+      countryCode: 'VN',
+      e164Sc: 0,
+      geographic: true,
+      level: 1,
+      name: 'Vietnam',
+      example: 'Vietnam',
+      displayName: 'Vietnam (Việt Nam)',
+      displayNameNoCountryCode: 'VN',
+      e164Key: ''
   );
 
   @override
