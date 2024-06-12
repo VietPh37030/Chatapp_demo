@@ -1,6 +1,7 @@
 // show snack bar
 import 'dart:io';
 
+import 'package:chatapp_firebase/utilities/assets_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +11,9 @@ void showSnackBar(BuildContext context, String message) {
     content: Text(message),
   ));
 }
+//
+
+
 
 //TODO: pick image  from gallery or  camera
 Future<File?> pickImage({
@@ -45,4 +49,18 @@ Future<File?> pickImage({
     }
   }
   return fileImage;
+}
+Widget userImageWidget({
+  required String imageUrl,
+  required double radius,
+  required VoidCallback onTap,
+}){
+  return GestureDetector(
+    onTap: onTap,
+    child: CircleAvatar(
+      radius: radius,
+      backgroundColor: Colors.grey[300],
+      backgroundImage: imageUrl.isNotEmpty ?NetworkImage(imageUrl):const AssetImage(AssetsManager.userImage)as ImageProvider,
+    ),
+  );
 }

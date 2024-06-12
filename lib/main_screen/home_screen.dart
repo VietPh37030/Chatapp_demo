@@ -1,9 +1,11 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:chatapp_firebase/constants.dart';
 import 'package:chatapp_firebase/main_screen/chats_list_screen.dart';
 import 'package:chatapp_firebase/main_screen/groups_list_screen.dart';
 import 'package:chatapp_firebase/main_screen/people_screen.dart';
 import 'package:chatapp_firebase/providers/authentication_provider.dart';
-import 'package:chatapp_firebase/utilities/assets_manager.dart';
+import 'package:chatapp_firebase/utilities/global_methods.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,20 +34,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(" App Chat Demo"),
-        actions: [
+        actions:  [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: authProvider.userModel!.image == ''
-                ? const CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 20,
-                    backgroundImage: AssetImage(AssetsManager.userImage),
-                  )
-                : CircleAvatar(
-                    radius: 20,
-                    backgroundImage:
-                        NetworkImage(authProvider.userModel!.image),
-                  ),
+            child: userImageWidget(
+                imageUrl: authProvider.userModel!.image,
+                radius: 20,
+                onTap: () {
+                  //TODO:navigate to profile user  with uis as argument
+                  Navigator.pushNamed(context,Constants.profileScreen,arguments: authProvider.userModel!.uid);
+                }),
           ),
         ],
       ),

@@ -29,12 +29,13 @@ class AuthenticationProvider extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+
 //TODO:Check  authentication state
-Future<bool> checkAuthenticationState() async{
+  Future<bool> checkAuthenticationState() async {
     bool isSignedIn = false;
 
     await Future.delayed(const Duration(seconds: 2));
-    if(_auth.currentUser!=null){
+    if (_auth.currentUser != null) {
       _uid = _auth.currentUser!.uid;
 
       //TODO:get user data from firebase
@@ -43,22 +44,22 @@ Future<bool> checkAuthenticationState() async{
       await saveUserDataToSharedPreferences();
       notifyListeners();
       isSignedIn = true;
-    }else{
-      isSignedIn= false;
+    } else {
+      isSignedIn = false;
     }
     return isSignedIn;
-}
+  }
 
   //TODO:Check if user exists
   Future<bool> checkUserExists() async {
     DocumentSnapshot documentSnapshot =
-    await _firestore.collection(Constants.users).doc(_uid).get();
+        await _firestore.collection(Constants.users).doc(_uid).get();
     return documentSnapshot.exists;
   }
 
   Future<void> getUserDataFromFireStore() async {
     DocumentSnapshot documentSnapshot =
-    await _firestore.collection(Constants.users).doc(_uid).get();
+        await _firestore.collection(Constants.users).doc(_uid).get();
     _userModel =
         UserModel.fromMap(documentSnapshot.data() as Map<String, dynamic>);
     notifyListeners();
@@ -188,4 +189,16 @@ Future<bool> checkAuthenticationState() async{
     String fileUrl = await taskSnapshot.ref.getDownloadURL();
     return fileUrl;
   }
+
+  //TODO:get user Stream:ProfileScreen
+  Stream<DocumentSnapshot> userStream({required String userID}) {
+    return _firestore.collection(Constants.users).doc(_uid).snapshots();
+  }
+
+ Future  logout() async{
+    await _auth.signOut();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences.clear();
+    notifyListeners();
+ }
 }
