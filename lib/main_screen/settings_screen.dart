@@ -1,5 +1,10 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../constants.dart';
+import '../providers/authentication_provider.dart';
+import '../widgets/app_bar_back-button.dart';
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -37,6 +42,54 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        //TODO:logout
+        leading: AppBarBackButton(onPressed: () {
+          Navigator.pop(context);
+        }),
+        centerTitle: true,
+        title: const Text("Cài đặt"),
+        actions: [
+          // currentUser.uid == uid?
+          IconButton(
+            onPressed: () async {
+              //Taọ hộp hội thoại khi ta đăng xuat
+              showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text(
+                      'Đăng xuất',
+                      textAlign: TextAlign.center,
+                    ),
+                    content: const Text(
+                      "Bạn muốn đăng xuất không ?",
+                      textAlign: TextAlign.center,
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cancel')),
+                      TextButton(
+                          onPressed: () async {
+                            await context
+                                .read<AuthenticationProvider>()
+                                .logout()
+                                .whenComplete(() {
+                              Navigator.pushNamedAndRemoveUntil(context,
+                                  Constants.loginScreen, (route) => false);
+                            });
+                          },
+                          child: const Text('Đăng Xuất Ngay'))
+                    ],
+                  ));
+            },
+            icon: const Icon(Icons.logout),
+          )
+          // :const SizedBox(),
+        ],
+      ),
       body: Center(
         child: Card(
           child: SwitchListTile(

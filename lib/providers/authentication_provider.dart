@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+
 import 'package:chatapp_firebase/constants.dart';
 import 'package:chatapp_firebase/models/user_model.dart';
 import 'package:chatapp_firebase/utilities/global_methods.dart';
@@ -194,7 +195,10 @@ class AuthenticationProvider extends ChangeNotifier {
   Stream<DocumentSnapshot> userStream({required String userID}) {
     return _firestore.collection(Constants.users).doc(_uid).snapshots();
   }
-
+//TODO:Get  all user stream
+  Stream<QuerySnapshot> getAllUsersStream({required String userID}) {
+    return _firestore.collection(Constants.users).where(Constants.uid,isNotEqualTo: userID).snapshots();
+  }
  Future  logout() async{
     await _auth.signOut();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
