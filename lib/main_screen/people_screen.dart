@@ -1,14 +1,15 @@
-import 'package:chatapp_firebase/constants.dart';
-import 'package:chatapp_firebase/providers/authentication_provider.dart';
-import 'package:chatapp_firebase/utilities/global_methods.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
+import '../constants.dart';
+import '../providers/authentication_provider.dart';
 import '../utilities/assets_manager.dart';
+import '../utilities/global_methods.dart';
+
 
 class PeopleScreen extends StatefulWidget {
   const PeopleScreen({super.key});
@@ -22,28 +23,23 @@ class _PeopleScreenState extends State<PeopleScreen> {
   Widget build(BuildContext context) {
     final currentUser = context.read<AuthenticationProvider>().userModel!;
     return Scaffold(
-      // Scaffold là khung chính của một trang trong Flutter, cung cấp cấu trúc cơ bản
       body: SafeArea(
-        // SafeArea đảm bảo nội dung không bị che bởi các phần tử hệ thống như thanh trạng thái
         child: Column(
           children: [
-            //   Cupertino Search bar
             const Padding(
               padding: EdgeInsets.all(8.0),
               child: CupertinoSearchTextField(
-                placeholder: 'Search',
+                placeholder: 'Tìm kiếm',
               ),
             ),
-            // Expanded mở rộng widget con để chiếm toàn bộ không gian còn lại của Column
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: context
                     .read<AuthenticationProvider>()
                     .getAllUsersStream(userID: currentUser.uid),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.hasError) {
-                    return const Center(child: Text('Something went wrong'));
+                    return const Center(child: Text('Có lỗi xảy ra'));
                   }
 
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -73,8 +69,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
 
                   return ListView(
                     children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                      Map<String, dynamic> data =
-                      document.data()! as Map<String, dynamic>;
+                      Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
                       return ListTile(
                         leading: userImageWidget(
                           imageUrl: data[Constants.image],
@@ -88,16 +83,17 @@ class _PeopleScreenState extends State<PeopleScreen> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         onTap: () {
-                          // Navigate to the selected user's profile
+                          // Điều hướng tới trang hồ sơ của người dùng được chọn
                           Navigator.pushNamed(
                             context,
                             Constants.profileScreen,
-                            arguments: document.id,
+                            arguments: document.id, // Đảm bảo rằng bạn đang truyền đúng document.id
                           );
                         },
                       );
                     }).toList(),
                   );
+
                 },
               ),
             ),

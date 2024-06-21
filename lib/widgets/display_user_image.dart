@@ -26,10 +26,10 @@ class DisplayUserImage extends StatelessWidget {
             child: InkWell(
               //TO:Sử lí hành động
               onTap: onPressed,
-              child: const CircleAvatar(
+              child:  CircleAvatar(
                 radius: 20,
-                backgroundColor: Colors.green,
-                child: Icon(
+                backgroundColor: Theme.of(context).primaryColor,
+                child: const Icon(
                   Icons.camera_alt,
                   color: Colors.white,
                   size: 20,
