@@ -264,6 +264,48 @@ class AuthenticationProvider extends ChangeNotifier {
       Constants.friendsUIDs: FieldValue.arrayRemove([friendID]),
     });
   }
+  //TODO:Get a list of friends
+  Future<List<UserModel>> getFriendsList(String uid) async {
+    List<UserModel> friendList = [];
+    DocumentSnapshot documentSnapshot = await _firestore.collection(Constants.users).doc(uid).get();
+    List<dynamic> friendsUIDs = documentSnapshot.get(Constants.friendsUIDs);
+    for(String friendsUID in friendsUIDs){
+      DocumentSnapshot documentSnapshot = await _firestore
+          .collection(Constants.users)
+          .doc(friendsUID)
+          .get();
+     UserModel friend  = UserModel.fromMap(documentSnapshot.data() as Map<String,dynamic>);
+     friendList.add(friend);
+    }
+    return friendList;
+  }
+  //TODO:Get a list of friend requests
+  Future<List<UserModel>> getFriendRequestsList(String uid) async {
+    List<UserModel> friendRequestList = [];
+    DocumentSnapshot documentSnapshot = await _firestore.collection(Constants.users).doc(uid).get();
+    List<dynamic> friendRequestsUIDs = documentSnapshot.get(Constants.friendsRequestsUIDs);
+    for(String friendRequestsUID in friendRequestsUIDs){
+      DocumentSnapshot documentSnapshot = await _firestore
+          .collection(Constants.users)
+          .doc(friendRequestsUID)
+          .get();
+      UserModel friend  = UserModel.fromMap(documentSnapshot.data() as Map<String,dynamic>);
+      friendRequestList.add(friend);
+    }
+    return friendRequestList;
+  }
+  //TODO:get list of friend requests
+  Future<List<DocumentSnapshot>> getFriendRequestList() async {
+    List<DocumentSnapshot> friendList = [];
+    QuerySnapshot querySnapshot = await _firestore
+        .collection(Constants.users)
+        .where(Constants.friendsRequestsUIDs, arrayContains: [_uid])
+        .get();
+    querySnapshot.docs.forEach((element) {
+      friendList.add(element);
+    });
+    return friendList;
+  }
 
   Future logout() async {
     await _auth.signOut();

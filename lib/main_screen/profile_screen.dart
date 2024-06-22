@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -148,8 +146,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return buildElevatedButton(
         onPressed: () {
           // Xử lý khi nhấn vào nút yêu cầu kết bạn
+          Navigator.pushNamed(context, Constants.friendRequestsScreen);
         },
-        label: 'Xem yêu cầu kết bạn', width: MediaQuery.of(context).size.width * 0.7,
+        label: 'Xem yêu cầu kết bạn',
+        width: MediaQuery.of(context).size.width * 0.7,
       );
     } else {
       return const SizedBox
@@ -166,8 +166,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return buildElevatedButton(
         onPressed: () {
           // Xử lý khi nhấn vào nút xem bạn bè
+          Navigator.pushNamed(
+            context,
+            Constants.friendsScreen,
+          );
         },
-        label: 'Xem bạn bè', width: MediaQuery.of(context).size.width * 0.7,
+        label: 'Xem bạn bè',
+        width: MediaQuery.of(context).size.width * 0.7,
       );
     } else if (currentUser.uid != userModel.uid) {
       // Hiển thị nút gửi yêu cầu kết bạn hoặc hủy yêu cầu kết bạn
@@ -175,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (userModel.friendsRequestsUIDs.contains(currentUser.uid)) {
         return buildElevatedButton(
           onPressed: () async {
-            // Xử lý khi nhấn vào nút gửi hoặc hủy yêu cầu kết bạn
+            // Xử lý  khi nhấn vào nút gửi hoặc hủy yêu cầu kết bạn
             await context
                 .read<AuthenticationProvider>()
                 .cancelFriendRequest(friendID: userModel.uid)
@@ -183,22 +188,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               showSnackBar(context, 'Đã hủy yêu cầu kết bạn');
             });
           },
-          label: 'Hủy yêu cầu', width: MediaQuery.of(context).size.width * 0.7,
+          label: 'Hủy yêu cầu',
+          width: MediaQuery.of(context).size.width * 0.7,
         );
       } else if (userModel.sendRequestsUIDs.contains(currentUser.uid)) {
-        return
-            buildElevatedButton(
-              onPressed: () async {
-                // Xử lý khi nhấn vào nút gửi hoặc hủy yêu cầu kết bạn
-                await context
-                    .read<AuthenticationProvider>()
-                    .acceptFriendRequest(friendID: userModel.uid)
-                    .whenComplete(() {
-                  showSnackBar(context, 'Bạn đã là bạn của ${userModel.name}');
-                });
-              },
-              label: 'Chấp nhận lời mời', width: MediaQuery.of(context).size.width * 0.7,
-
+        return buildElevatedButton(
+          onPressed: () async {
+            // Xử lý khi nhấn vào nút gửi hoặc hủy yêu cầu kết bạn
+            await context
+                .read<AuthenticationProvider>()
+                .acceptFriendRequest(friendID: userModel.uid)
+                .whenComplete(() {
+              showSnackBar(context, 'Bạn đã là bạn của ${userModel.name}');
+            });
+          },
+          label: 'Chấp nhận lời mời',
+          width: MediaQuery.of(context).size.width * 0.7,
         );
       } else if (userModel.friendsUIDs.contains(currentUser.uid)) {
         return Row(
@@ -206,13 +211,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             buildElevatedButton(
               onPressed: () async {
-               //Hiênr thị dialog hủy kết bạn
+                //Hiênr thị dialog hủy kết bạn
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: const Center(child: Text('Xác nhận ')),
-                      content: Text('Bạn muốn hủy kết bạn voi ${userModel.name}?',textAlign: TextAlign.center,),
+                      content: Text(
+                        'Bạn muốn hủy kết bạn voi ${userModel.name}?',
+                        textAlign: TextAlign.center,
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () {
@@ -253,17 +261,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       } else {
         return buildElevatedButton(
-          onPressed: () async {
-            // Xử lý khi nhấn vào nút gửi hoặc hủy yêu cầu kết bạn
-            await context
-                .read<AuthenticationProvider>()
-                .sendFriendRequest(friendID: userModel.uid)
-                .whenComplete(() {
-              showSnackBar(context, 'Đã gửi yêu cầu kết bạn');
-            });
-          },
-          label: 'Gửi lời mời🖖',  width: MediaQuery.of(context).size.width * 0.7);
-
+            onPressed: () async {
+              // Xử lý khi nhấn vào nút gửi hoặc hủy yêu cầu kết bạn
+              await context
+                  .read<AuthenticationProvider>()
+                  .sendFriendRequest(friendID: userModel.uid)
+                  .whenComplete(() {
+                showSnackBar(context, 'Đã gửi yêu cầu kết bạn');
+              });
+            },
+            label: 'Gửi lời mời🖖',
+            width: MediaQuery.of(context).size.width * 0.7);
       }
 
       // Widget nút gửi hoặc hủy yêu cầu kết bạn
