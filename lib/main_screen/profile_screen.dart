@@ -253,6 +253,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () {
                 // TODO: Implement send message functionality
                 // Ví dụ: Chuyển hướng đến màn hình chat
+                Navigator.pushNamed(context, Constants.chatScreen,
+                    arguments: {
+                  Constants.contactUID: userModel.uid,
+                      Constants.contactName: userModel.name,
+                      Constants.contactImage: userModel.image,
+                      Constants.groupId: '',
+                    });
               },
               label: 'Gửi tin nhắn',
               width: MediaQuery.of(context).size.width * 0.4, // Giảm chiều rộng

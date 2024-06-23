@@ -56,7 +56,13 @@ class FriendsList extends StatelessWidget {
                   trailing: ElevatedButton(
                     onPressed: () async {
                       if (viewType == FriendViewType.friends) {
-                        ////
+                        Navigator.pushNamed(context, Constants.chatScreen,
+                         arguments: {
+                            Constants.contactUID: data.uid,
+                            Constants.contactName: data.name,
+                            Constants.contactImage: data.image,
+                            Constants.groupId: '',
+                            });
                       } else if (viewType == FriendViewType.friendRequests) {
                         await context
                             .read<AuthenticationProvider>()
