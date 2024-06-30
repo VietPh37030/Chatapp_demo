@@ -3,6 +3,7 @@ import 'package:chatapp_firebase/widgets/friends_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../enum/enums.dart';
 import '../widgets/app_bar_back-button.dart';
 
 class FriendsScreen extends StatefulWidget {

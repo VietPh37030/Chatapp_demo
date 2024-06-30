@@ -35,6 +35,19 @@ dependencies:
   uuid: ^4.2.2
   rounded_loading_button_plus: ^3.0.1
   date_format: ^2.0.7
+  grouped_list: ^6.0.0
+  swipe_to: ^1.0.5
+  timeago: ^3.6.0
+  cached_network_image: ^3.3.1
+  flutter_sound_record: ^3.3.2
+  permission_handler: ^11.1.0
+  audioplayers: ^5.2.1
+  path_provider: ^2.1.2
+  cached_video_player: ^2.0.4
+  emoji_picker_flutter: ^1.6.3
+  animate_do: ^3.1.2
+  flutter_chat_reactions: ^0.1.0
+  font_awesome_flutter: ^10.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

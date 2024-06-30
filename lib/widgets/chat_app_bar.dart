@@ -7,7 +7,7 @@ import '../constants.dart';
 import '../models/user_model.dart';
 import '../providers/authentication_provider.dart';
 import '../utilities/global_methods.dart';
-
+import 'package:timeago/timeago.dart' as timeago;
 class ChatAppBar extends StatefulWidget {
   const ChatAppBar({super.key, required this.contactUID});
 
@@ -39,7 +39,8 @@ class _ChatAppBarState extends State<ChatAppBar> {
         // Chuyển dữ liệu từ Firestore thành UserModel
         final userModel =
         UserModel.fromMap(snapshot.data!.data() as Map<String, dynamic>);
-
+        DateTime lastSeen =
+        DateTime.fromMillisecondsSinceEpoch(int.parse(userModel.lastSeen));
         // Hiển thị nội dung trang thông tin cá nhân
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,12 +66,15 @@ class _ChatAppBarState extends State<ChatAppBar> {
                       fontSize: 16,
                     ),),
                      Text(
-                      'Online',
-                      //UserModel.isOnline ? 'Online' : 'Offline',
-                      style:GoogleFonts.openSans(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                      ),
+                       userModel.isOnline
+                           ? 'Online'
+                           : 'Khoảng ${timeago.format(lastSeen)}',
+                       style: GoogleFonts.openSans(
+                         fontSize: 12,
+                         color: userModel.isOnline
+                             ? Colors.green
+                             : Colors.grey.shade600,
+                       ),
                     ),
                   ],
                 ),

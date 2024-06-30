@@ -7,9 +7,9 @@ import 'package:chatapp_firebase/main_screen/friend_requests_screen.dart';
 import 'package:chatapp_firebase/main_screen/friends_screen.dart';
 import 'package:chatapp_firebase/main_screen/home_screen.dart';
 import 'package:chatapp_firebase/main_screen/profile_screen.dart';
-import 'package:chatapp_firebase/main_screen/settings_screen.dart';
 import 'package:chatapp_firebase/providers/authentication_provider.dart';
 import 'package:chatapp_firebase/providers/chat_provider.dart';
+import 'package:chatapp_firebase/providers/group_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -18,6 +18,8 @@ import 'package:provider/provider.dart';
 import 'authentication/landing_screen.dart';
 import 'constants.dart';
 import 'firebase_options.dart';
+import 'main_screen/group_information_screen.dart';
+import 'main_screen/group_settings_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +31,7 @@ void main() async {
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => AuthenticationProvider()),
       ChangeNotifierProvider(create: (_) => ChatProvider()),
+      ChangeNotifierProvider(create: (_) => GroupProvider()),
     ],child:MyApp(savedThemeMode: savedThemeMode),),);
 
 
@@ -66,12 +69,14 @@ class MyApp extends StatelessWidget {
           Constants.otpScreen:(context) =>const OtpScreen(),
           Constants.userInformationScreen: (context) => const UserInformationScreen(),
           Constants.homeScreen: (context) => const HomeScreen(),
-          Constants.settingsScreen: (context) => const SettingsScreen(),
           Constants.profileScreen :(context) =>const ProfileScreen(),
           Constants.friendsScreen: (context) => const FriendsScreen(),
-          Constants.friendRequestsScreen: (context) => const FriendRequestsScreen(),
+          Constants.friendRequestsScreen: (context) => const FriendRequestScreen(),
           Constants.chatScreen: (context) => const ChatScreen(),
-
+          Constants.groupSettingsScreen: (context) =>
+          const GroupSettingsScreen(),
+          Constants.groupInformationScreen: (context) =>
+          const GroupInformationScreen(),
         },
         navigatorObservers: [
           FirebaseAnalyticsObserver(analytics: analytics),

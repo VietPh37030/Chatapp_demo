@@ -1,4 +1,7 @@
-import 'package:chatapp_firebase/constants.dart';
+
+import 'package:chatapp_firebase/enum/enums.dart';
+
+import '../constants.dart';
 
 class MessageModel {
   final String senderUID;
@@ -13,6 +16,9 @@ class MessageModel {
   final String repliedMessage;
   final String repliedTo;
   final MessageEnum repliedMessageType;
+  final List<String> reactions;
+  final List<String> isSeenBy;
+  final List<String> deletedBy;
 
   MessageModel({
     required this.senderUID,
@@ -27,9 +33,12 @@ class MessageModel {
     required this.repliedMessage,
     required this.repliedTo,
     required this.repliedMessageType,
+    required this.reactions,
+    required this.isSeenBy,
+    required this.deletedBy,
   });
 
-  //to map
+  // to map
   Map<String, dynamic> toMap() {
     return {
       Constants.senderUID: senderUID,
@@ -44,10 +53,13 @@ class MessageModel {
       Constants.repliedMessage: repliedMessage,
       Constants.repliedTo: repliedTo,
       Constants.repliedMessageType: repliedMessageType.name,
+      Constants.reactions: reactions,
+      Constants.isSeenBy: isSeenBy,
+      Constants.deletedBy: deletedBy,
     };
   }
 
-// From map
+  // from map
   factory MessageModel.fromMap(Map<String, dynamic> map) {
     return MessageModel(
       senderUID: map[Constants.senderUID] ?? '',
@@ -56,15 +68,16 @@ class MessageModel {
       contactUID: map[Constants.contactUID] ?? '',
       message: map[Constants.message] ?? '',
       messageType: map[Constants.messageType].toString().toMessageEnum(),
-      timeSent: DateTime.fromMicrosecondsSinceEpoch(
-        map[Constants.timeSent],
-      ),
+      timeSent: DateTime.fromMillisecondsSinceEpoch(map[Constants.timeSent]),
       messageId: map[Constants.messageId] ?? '',
       isSeen: map[Constants.isSeen] ?? false,
       repliedMessage: map[Constants.repliedMessage] ?? '',
       repliedTo: map[Constants.repliedTo] ?? '',
       repliedMessageType:
-          map[Constants.repliedMessageType].toString().toMessageEnum(),
+      map[Constants.repliedMessageType].toString().toMessageEnum(),
+      reactions: List<String>.from(map[Constants.reactions] ?? []),
+      isSeenBy: List<String>.from(map[Constants.isSeenBy] ?? []),
+      deletedBy: List<String>.from(map[Constants.deletedBy] ?? []),
     );
   }
 
@@ -82,6 +95,9 @@ class MessageModel {
       repliedMessage: repliedMessage,
       repliedTo: repliedTo,
       repliedMessageType: repliedMessageType,
+      reactions: reactions,
+      isSeenBy: isSeenBy,
+      deletedBy: deletedBy,
     );
   }
 }

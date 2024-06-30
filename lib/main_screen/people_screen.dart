@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
-import '../constants.dart';
+import '../enum/enums.dart';
+import '../models/user_model.dart';
 import '../providers/authentication_provider.dart';
-import '../utilities/assets_manager.dart';
-import '../utilities/global_methods.dart';
-
+import '../widgets/friend_widget.dart';
 
 class PeopleScreen extends StatefulWidget {
   const PeopleScreen({super.key});
@@ -23,83 +22,63 @@ class _PeopleScreenState extends State<PeopleScreen> {
   Widget build(BuildContext context) {
     final currentUser = context.read<AuthenticationProvider>().userModel!;
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CupertinoSearchTextField(
-                placeholder: 'Tìm kiếm',
+        body: SafeArea(
+          child: Column(
+            children: [
+              // cupertino search bar
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: CupertinoSearchTextField(
+                  placeholder: 'Search',
+                ),
               ),
-            ),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: context
-                    .read<AuthenticationProvider>()
-                    .getAllUsersStream(userID: currentUser.uid),
-                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasError) {
-                    return const Center(child: Text('Có lỗi xảy ra'));
-                  }
 
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+              // list of users
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: context
+                      .read<AuthenticationProvider>()
+                      .getAllUsersStream(userID: currentUser.uid),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError) {
+                      return const Center(child: Text('Something went wrong'));
+                    }
 
-                  if (snapshot.data!.docs.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Không có người dùng nào được tìm thấy',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.openSans(
-                              fontSize: 15,
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (snapshot.data!.docs.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Không tìm thấy người dùng nào.',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.openSans(
+                              fontSize: 18,
                               fontWeight: FontWeight.w500,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                          Lottie.asset(AssetsManager.sadIcon),
-                        ],
-                      ),
-                    );
-                  }
-
-                  return ListView(
-                    children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                      Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-                      return ListTile(
-                        leading: userImageWidget(
-                          imageUrl: data[Constants.image],
-                          radius: 40,
-                          onTap: () {},
+                              letterSpacing: 1.2),
                         ),
-                        title: Text(data[Constants.name]),
-                        subtitle: Text(
-                          data[Constants.aboutMe],
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        onTap: () {
-                          // Điều hướng tới trang hồ sơ của người dùng được chọn
-                          Navigator.pushNamed(
-                            context,
-                            Constants.profileScreen,
-                            arguments: document.id, // Đảm bảo rằng bạn đang truyền đúng document.id
-                          );
-                        },
                       );
-                    }).toList(),
-                  );
+                    }
 
-                },
+                    return ListView(
+                      children:
+                      snapshot.data!.docs.map((DocumentSnapshot document) {
+                        final data = UserModel.fromMap(
+                            document.data()! as Map<String, dynamic>);
+
+                        return FriendWidget(
+                            friend: data, viewType: FriendViewType.allUsers);
+
+
+                      }).toList(),
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            ],
+          ),
+        ));
   }
 }

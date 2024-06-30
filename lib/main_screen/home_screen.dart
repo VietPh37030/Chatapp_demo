@@ -1,13 +1,14 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:chatapp_firebase/constants.dart';
-import 'package:chatapp_firebase/main_screen/chats_list_screen.dart';
-import 'package:chatapp_firebase/main_screen/groups_list_screen.dart';
+import 'package:chatapp_firebase/main_screen/groups_screen.dart';
+import 'package:chatapp_firebase/main_screen/my_chats_screen.dart';
 import 'package:chatapp_firebase/main_screen/people_screen.dart';
 import 'package:chatapp_firebase/providers/authentication_provider.dart';
 import 'package:chatapp_firebase/utilities/global_methods.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,8 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final PageController pageController = PageController(initialPage: 0);
   int currentIndex = 0;
   final List<Widget> pages = [
-    ChatsListScreen(),
-    GroupsListScreen(),
+    MyChatsScreen(),
+    GroupsScreen(),
     PeopleScreen()
   ];
 
@@ -59,12 +60,12 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.chat_bubble_2), label: 'Chats'),
+              icon: Icon(FontAwesomeIcons.rocketchat), label: 'Chat'),
           // BottomNavigationItem
           BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.group), label: 'Groups'),
+              icon: Icon(FontAwesomeIcons.fortyTwoGroup), label: 'Nhóm'),
           BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.globe), label: 'People'),
+              icon: Icon(FontAwesomeIcons.peopleRobbery), label: 'Mọi người'),
         ],
         currentIndex: currentIndex,
         onTap: (index) {

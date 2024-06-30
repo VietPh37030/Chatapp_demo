@@ -5,14 +5,19 @@ import 'package:chatapp_firebase/utilities/global_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../enum/enums.dart';
+
 class FriendsList extends StatelessWidget {
   const FriendsList({
     super.key,
     required this.viewType,
+    this.groupId = '',
+    this.groupMembersUIDs = const [],
   });
 
   final FriendViewType viewType;
-
+  final String groupId;
+  final List<String> groupMembersUIDs;
   @override
   Widget build(BuildContext context) {
     final uid = context.read<AuthenticationProvider>().userModel!.uid;
@@ -30,7 +35,7 @@ class FriendsList extends StatelessWidget {
         }
 
         if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text("No Friends"));
+          return const Center(child: Text("Không có bạn nào cả"));
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
@@ -77,7 +82,7 @@ class FriendsList extends StatelessWidget {
                     },
                     child: viewType == FriendViewType.friends
                         ? const Text('Chat')
-                        : const Text('Accept'),
+                        : const Text('Đồng ý'),
                   ),
                 );
               });
